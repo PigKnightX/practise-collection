@@ -6,7 +6,7 @@ const DemoPage = () => {
         console.log('click');
     }
 
-    const debounced = debounce(handldClick, 250, { 'maxWait': 1000 })
+    const debounced = debounce(handldClick, 1000, { })
 
     return (
         <div
