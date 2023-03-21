@@ -55,6 +55,11 @@ function customFilter(callback, thisArg) {
     return res;
 }
 
+// 5. Array.prototype.map()
+// 6. Array.prototype.forEach()
+
+// TODO: Array.prototype.reduce()
+
 export {
     flatArrWithFlat,
     flatArrWithReduce,
