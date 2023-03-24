@@ -58,7 +58,38 @@ function customFilter(callback, thisArg) {
 // 5. Array.prototype.map()
 // 6. Array.prototype.forEach()
 
-// TODO: Array.prototype.reduce()
+// 7. Array.prototype.reduce()
+/**
+ *
+ * @param {*} callback (accumulator, currentValue, index, array) => {}
+ * @param {*} initialValue
+ */
+function customReduce(callback, initialValue) {
+    if (this === undefined) {
+        throw new TypeError('this is null or not defined');
+    }
+    if (typeof callback !== 'function') {
+        throw new TypeError(callback + ' is not a function');
+    }
+    let accumulator = initialValue;
+
+    let arr = this;
+    if (!accumulator) {
+        accumulator = arr[0];
+    }
+
+    for (let index = 1; index < arr.length; index++) {
+        accumulator = callback.call(
+            undefined,
+            accumulator,
+            arr[index],
+            index,
+            arr
+        );
+    }
+
+    return accumulator;
+}
 
 export {
     flatArrWithFlat,
@@ -70,4 +101,5 @@ export {
     uniqueArrWithFilter,
     uniqueArrWithInclude,
     customFilter,
+    customReduce,
 };
