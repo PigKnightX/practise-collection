@@ -2,44 +2,49 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 test('excution func', () => {
-    function customReduce(callback, initialValue) {
-        if (this === undefined) {
-            throw new TypeError('this is null or not defined');
-        }
-        if (typeof callback !== 'function') {
-            throw new TypeError(callback + ' is not a function');
-        }
-        let accumulator = initialValue;
+    const nameReader = {
+        name: 'source',
+        getName: function () {
+            return this.name;
+        },
+        setName: function (name) {
+            this.name = name;
+        },
+    };
 
-        let arr = this;
-        if (!accumulator) {
-            accumulator = arr[0];
-        }
+    const plainObj = {
+        name: 'plain',
+    };
 
-        for (let index = 1; index < arr.length; index++) {
-            accumulator = callback.call(
-                undefined,
-                accumulator,
-                arr[index],
-                index,
-                arr
-            );
-        }
+    const plainObjNameReader = nameReader.getName.bind(plainObj);
 
-        return accumulator;
+    const result = plainObjNameReader();
+
+    function NameReaderGenerater(name) {
+        this.name = name;
+        this.setName = function (name) {
+            this.name = name;
+        };
+        this.getName = function () {
+            return this.name;
+        };
     }
 
-    Array.prototype.customReduce = customReduce;
+    const nameReader1 = new NameReaderGenerater('nameReader1');
+    nameReader1.setName('reder1');
 
-    const arr = ['a', 's', 'd'];
-    const result = arr.customReduce((accumulator, cur) => {
-        return accumulator + cur;
-    });
-    const arr1 = [1, 2, 3, 4, 5];
-    const result1 = arr1.customReduce((accumulator, cur) => {
-        return accumulator + cur;
-    });
+    let foo = {
+        name: 'foo',
+    };
 
-    expect(result).toBe('asd');
-    expect(result1).toBe(15);
+    // 作为构造函数时，bind 传入的this被扔掉，此时的this是new出来的新对象。
+    const GeneratorCopy = NameReaderGenerater.bind(foo, 'GeneratorCopy');
+    const generatorCopyObj = new GeneratorCopy();
+
+    // TODO: JS 继承
+    // TODO: 实现bind
+
+    expect(result).toBe('plain');
+    expect(nameReader1.name).toBe('reder1');
+    expect(generatorCopyObj.name).toBe('GeneratorCopy');
 });
